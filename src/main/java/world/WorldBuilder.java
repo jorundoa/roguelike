@@ -1,12 +1,16 @@
+package world;
+
+import tile.Tile;
+
 public class WorldBuilder {
     private int width;
     private int height;
     private Tile[][] tiles;
 
-    public WorldBuilder(Tile[][] tiles){
-        this.width = tiles.length;
-        this.height = tiles[0].length;
-        this.tiles = tiles;
+    public WorldBuilder(int width, int height){
+        this.width = width;
+        this.height = height;
+        this.tiles = new Tile[width][height];
     }
 
     public World build(){

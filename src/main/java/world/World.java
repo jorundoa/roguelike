@@ -1,3 +1,7 @@
+package world;
+
+import tile.Tile;
+
 import java.awt.Color;
 
 
@@ -5,6 +9,7 @@ public class World {
     private Tile[][] tiles;
     private int width;
     private int height;
+
 
     public int getWidth(){return width;}
     public int getHeight(){return height;}

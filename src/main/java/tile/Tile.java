@@ -1,3 +1,5 @@
+package tile;
+
 import java.awt.Color;
 import asciiPanel.AsciiPanel;
 
