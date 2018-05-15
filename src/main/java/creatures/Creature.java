@@ -10,11 +10,16 @@ public class Creature {
     private Color color;
     private char glyph;
 
+    private CreatureAi ai;
+
     public int x;
     public int y;
 
     public char glyph(){return glyph;}
     public Color color(){return color;}
+    public void setCreatureAi(CreatureAi ai){
+        this.ai = ai;
+    }
 
     public Creature(World world, char glyph, Color color){
         this.world = world;
