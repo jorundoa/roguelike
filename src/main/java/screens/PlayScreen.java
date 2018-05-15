@@ -27,21 +27,22 @@ public class PlayScreen implements Screen {
 
         displayTiles(terminal, left, top);
 
-        terminal.write('x', centerX, centerY);
+        terminal.write('x', centerX - left, centerY - top);
+        System.out.format("%d %d %n", centerX, centerY);
     }
 
     public Screen respondToUserInput(KeyEvent key) {
         switch (key.getKeyCode()){
             case KeyEvent.VK_ESCAPE: return new LoseScreen();
             case KeyEvent.VK_ENTER: return new WinScreen();
-            case KeyEvent.VK_LEFT:
-            case KeyEvent.VK_H: scrollBy(-1, 0); break;
-            case KeyEvent.VK_RIGHT:
-            case KeyEvent.VK_L: scrollBy( 1, 0); break;
-            case KeyEvent.VK_UP:
-            case KeyEvent.VK_K: scrollBy( 0,-1); break;
-            case KeyEvent.VK_DOWN:
-            case KeyEvent.VK_J: scrollBy( 0, 1); break;
+            case KeyEvent.VK_LEFT: scrollBy(-1, 0); break;
+            //case KeyEvent.VK_H:
+            case KeyEvent.VK_RIGHT: scrollBy( 1, 0); break;
+            //case KeyEvent.VK_L:
+            case KeyEvent.VK_UP: scrollBy( 0,-1); break;
+            //case KeyEvent.VK_K:
+            case KeyEvent.VK_DOWN: scrollBy( 0, 1); break;
+            //case KeyEvent.VK_J:
             case KeyEvent.VK_Y: scrollBy(-1,-1); break;
             case KeyEvent.VK_U: scrollBy( 1,-1); break;
             case KeyEvent.VK_B: scrollBy(-1, 1); break;
