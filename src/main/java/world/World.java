@@ -3,13 +3,17 @@ package world;
 import creatures.Creature;
 import tile.Tile;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class World {
-    private Tile[][] tiles;
     private int width;
     private int height;
+
+    private Tile[][] tiles;
+    private List<Creature> creatures;
 
 
     public int getWidth(){return width;}
@@ -19,6 +23,7 @@ public class World {
         this.tiles = tiles;
         this.width = tiles.length;
         this.height = tiles[0].length;
+        creatures = new ArrayList<>();
     }
 
 
@@ -28,6 +33,11 @@ public class World {
         else
             return tiles[x][y];
     }
+
+    public Creature creature(int x, int y) {
+        return creatures.stream().filter(c -> (c.x == x && c.y == y)).findAny().orElse(null);
+    }
+
     public char glyph(int x, int y){
         return tile(x,y).glyph();
     }
@@ -47,11 +57,12 @@ public class World {
         int y;
 
         do{
-            x = (int) Math.random() * width;
-            y = (int) Math.random() * height;
-        }while (!tile(x, y).isGround());
+            x = (int) (Math.random() * width);
+            y = (int) (Math.random() * height);
+        } while (!tile(x, y).isGround() || creature(x, y) == null);
 
         creature.x = x;
         creature.y = y;
+        creatures.add(creature);
     }
 }
