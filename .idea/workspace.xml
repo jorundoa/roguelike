@@ -10,7 +10,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/roguelike.iml" afterPath="$PROJECT_DIR$/roguelike.iml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/creatures/CreatureAis/PlayerAi.java" afterPath="$PROJECT_DIR$/src/main/java/creatures/CreatureAis/PlayerAi.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/world/World.java" afterPath="$PROJECT_DIR$/src/main/java/world/World.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -669,6 +668,14 @@
       <workItem from="1513968538511" duration="6996000" />
       <workItem from="1514891135290" duration="10127000" />
     </task>
+    <task id="LOCAL-00001" summary="Add creature list to world class">
+      <created>1526389917723</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1526389917723</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -704,7 +711,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27113000" />
+    <option name="totallyTimeSpent" value="27172000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-496" y="-1417" width="2560" height="1417" extended-state="6" />
