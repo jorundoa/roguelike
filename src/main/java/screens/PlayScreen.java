@@ -9,19 +9,19 @@ import world.WorldBuilder;
 
 public class PlayScreen implements Screen {
 
-    public World world;
+    private World world;
     private Creature player;
     private int screenWidth;
     private int screenHeight;
 
 
 
-    public PlayScreen(){
+    PlayScreen(){
         screenWidth = 80;
         screenHeight = 21;
         createWorld();
         CreatureFactory creatureFactory = new CreatureFactory(world);
-        player = creatureFactory.newPlayer();
+        createCreatures(creatureFactory);
     }
 
     public void displayOutput(AsciiPanel terminal) {
@@ -29,8 +29,7 @@ public class PlayScreen implements Screen {
         int top = getScrollY();
 
         displayTiles(terminal, left, top);
-
-        terminal.write(player.glyph(), player.x - left, player.y - top, player.color());
+        displayCreatures(terminal, left, top);
     }
 
     public Screen respondToUserInput(KeyEvent key) {
@@ -51,6 +50,8 @@ public class PlayScreen implements Screen {
             case KeyEvent.VK_N: player.moveBy( 1, 1); break;
         }
 
+        world.update();
+
         return this;
     }
 
@@ -58,6 +59,14 @@ public class PlayScreen implements Screen {
         world = new WorldBuilder(90, 31)
                 .makeCaves()
                 .build();
+    }
+
+    private void createCreatures(CreatureFactory creatureFactory) {
+        player = creatureFactory.newPlayer();
+
+        for(int i = 0; i < 8; i ++){
+            creatureFactory.newFungus();
+        }
     }
 
     private void displayTiles(AsciiPanel terminal, int left, int top){
@@ -71,11 +80,24 @@ public class PlayScreen implements Screen {
         }
     }
 
-    public int getScrollX(){
+    private void displayCreatures(AsciiPanel terminal, int left, int top) {
+        world.allCreatures().stream()
+                .filter(c -> withinScreen(c.x, c.y))
+                .forEach(c -> terminal.write(c.glyph(), c.x-left, c.y-top, c.color()));
+    }
+
+    private boolean withinScreen(int x, int y){
+        return x >= getScrollX() &&
+                x < getScrollX() + screenWidth &&
+                y >= getScrollY() &&
+                y < getScrollY() + screenHeight;
+    }
+
+    private int getScrollX(){
         return Math.max(0,Math.min(player.x - screenWidth/2, world.getWidth() - screenWidth));
     }
 
-    public int getScrollY(){
+    private int getScrollY(){
         return Math.max(0, Math.min(player.y - screenHeight/2, world.getHeight() - screenHeight));
     }
 }
