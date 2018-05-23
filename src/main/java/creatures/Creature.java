@@ -15,6 +15,11 @@ public class Creature {
     public int x;
     public int y;
 
+    private int hp;
+    private int maxHp;
+    private int attackValue;
+    private int defenseValue;
+
     public char glyph() {
         return glyph;
     }
@@ -27,10 +32,15 @@ public class Creature {
         this.ai = ai;
     }
 
-    Creature(World world, char glyph, Color color) {
+    Creature(World world, char glyph, Color color, int maxHp, int attackValue, int defenseValue) {
         this.world = world;
         this.color = color;
         this.glyph = glyph;
+
+        this.hp = maxHp;
+        this.maxHp = maxHp;
+        this.attackValue = attackValue;
+        this.defenseValue = defenseValue;
     }
 
     public void dig(int wx, int wy) {
@@ -48,7 +58,19 @@ public class Creature {
     }
 
     private void attack(Creature other) {
-        world.remove(other);
+        int damage = Math.max(0, attackValue() - other.defenseValue());
+
+        damage = (int) (Math.random() * damage + 1);
+
+        other.modifyHp(-damage);
+    }
+
+    private void modifyHp(int amount) {
+        hp += amount;
+
+        if (hp <= 0) {
+            world.remove(this);
+        }
     }
 
     public void update() {
@@ -57,5 +79,21 @@ public class Creature {
 
     public boolean canEnter(int x, int y) {
         return world.isEmpty(x, y) && world.isWithinWorld(x, y);
+    }
+
+    public int maxHp() {
+        return maxHp;
+    }
+
+    public int hp() {
+        return hp;
+    }
+
+    private int defenseValue() {
+        return defenseValue;
+    }
+
+    private int attackValue() {
+        return attackValue;
     }
 }
