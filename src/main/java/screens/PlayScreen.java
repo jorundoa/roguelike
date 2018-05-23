@@ -1,11 +1,14 @@
 package screens;
 
-import java.awt.event.KeyEvent;
 import asciiPanel.AsciiPanel;
 import creatures.Creature;
 import creatures.CreatureFactory;
 import world.World;
 import world.WorldBuilder;
+
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PlayScreen implements Screen {
 
@@ -13,12 +16,13 @@ public class PlayScreen implements Screen {
     private Creature player;
     private int screenWidth;
     private int screenHeight;
+    private List<String> messages;
 
 
-
-    PlayScreen(){
+    PlayScreen() {
         screenWidth = 80;
         screenHeight = 21;
+        messages = new ArrayList<>();
         createWorld();
         CreatureFactory creatureFactory = new CreatureFactory(world);
         createCreatures(creatureFactory);
@@ -33,24 +37,39 @@ public class PlayScreen implements Screen {
 
         String stats = String.format(" %3d/%3d hp", player.hp(), player.maxHp());
         terminal.write(stats, 1, 23);
+        displayMessages(terminal, messages);
     }
 
     public Screen respondToUserInput(KeyEvent key) {
-        switch (key.getKeyCode()){
-            case KeyEvent.VK_ESCAPE: return new LoseScreen();
-            case KeyEvent.VK_ENTER: return new WinScreen();
-            case KeyEvent.VK_LEFT: player.moveBy(-1, 0); break;
-            //case KeyEvent.VK_H:
-            case KeyEvent.VK_RIGHT: player.moveBy( 1, 0); break;
-            //case KeyEvent.VK_L:
-            case KeyEvent.VK_UP: player.moveBy( 0,-1); break;
-            //case KeyEvent.VK_K:
-            case KeyEvent.VK_DOWN: player.moveBy( 0, 1); break;
-            //case KeyEvent.VK_J:
-            case KeyEvent.VK_Y: player.moveBy(-1,-1); break;
-            case KeyEvent.VK_U: player.moveBy( 1,-1); break;
-            case KeyEvent.VK_B: player.moveBy(-1, 1); break;
-            case KeyEvent.VK_N: player.moveBy( 1, 1); break;
+        switch (key.getKeyCode()) {
+            case KeyEvent.VK_ESCAPE:
+                return new LoseScreen();
+            case KeyEvent.VK_ENTER:
+                return new WinScreen();
+            case KeyEvent.VK_LEFT:
+                player.moveBy(-1, 0);
+                break;
+            case KeyEvent.VK_RIGHT:
+                player.moveBy(1, 0);
+                break;
+            case KeyEvent.VK_UP:
+                player.moveBy(0, -1);
+                break;
+            case KeyEvent.VK_DOWN:
+                player.moveBy(0, 1);
+                break;
+            case KeyEvent.VK_Y:
+                player.moveBy(-1, -1);
+                break;
+            case KeyEvent.VK_U:
+                player.moveBy(1, -1);
+                break;
+            case KeyEvent.VK_B:
+                player.moveBy(-1, 1);
+                break;
+            case KeyEvent.VK_N:
+                player.moveBy(1, 1);
+                break;
         }
 
         world.update();
@@ -58,27 +77,27 @@ public class PlayScreen implements Screen {
         return this;
     }
 
-    private void createWorld(){
+    private void createWorld() {
         world = new WorldBuilder(90, 31)
                 .makeCaves()
                 .build();
     }
 
     private void createCreatures(CreatureFactory creatureFactory) {
-        player = creatureFactory.newPlayer();
+        player = creatureFactory.newPlayer(messages);
 
-        for(int i = 0; i < 8; i ++){
+        for (int i = 0; i < 8; i++) {
             creatureFactory.newFungus();
         }
     }
 
-    private void displayTiles(AsciiPanel terminal, int left, int top){
-        for(int x = 0; x < screenWidth; x++){
-            for(int y = 0; y < screenHeight; y++){
+    private void displayTiles(AsciiPanel terminal, int left, int top) {
+        for (int x = 0; x < screenWidth; x++) {
+            for (int y = 0; y < screenHeight; y++) {
                 int wx = x + left;
                 int wy = y + top;
 
-                terminal.write(world.glyph(wx,wy), x, y, world.color(wx, wy));
+                terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
             }
         }
     }
@@ -86,21 +105,29 @@ public class PlayScreen implements Screen {
     private void displayCreatures(AsciiPanel terminal, int left, int top) {
         world.allCreatures().stream()
                 .filter(c -> withinScreen(c.x, c.y))
-                .forEach(c -> terminal.write(c.glyph(), c.x-left, c.y-top, c.color()));
+                .forEach(c -> terminal.write(c.glyph(), c.x - left, c.y - top, c.color()));
     }
 
-    private boolean withinScreen(int x, int y){
+    private void displayMessages(AsciiPanel terminal, List<String> messages) {
+        int top = screenHeight - messages.size() + 1;
+        for (int i = 0; i < messages.size(); i++) {
+            terminal.writeCenter(messages.get(0), top + i);
+        }
+        messages.clear();
+    }
+
+    private boolean withinScreen(int x, int y) {
         return x >= getScrollX() &&
                 x < getScrollX() + screenWidth &&
                 y >= getScrollY() &&
                 y < getScrollY() + screenHeight;
     }
 
-    private int getScrollX(){
-        return Math.max(0,Math.min(player.x - screenWidth/2, world.getWidth() - screenWidth));
+    private int getScrollX() {
+        return Math.max(0, Math.min(player.x - screenWidth / 2, world.getWidth() - screenWidth));
     }
 
-    private int getScrollY(){
-        return Math.max(0, Math.min(player.y - screenHeight/2, world.getHeight() - screenHeight));
+    private int getScrollY() {
+        return Math.max(0, Math.min(player.y - screenHeight / 2, world.getHeight() - screenHeight));
     }
 }

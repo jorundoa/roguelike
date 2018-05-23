@@ -1,5 +1,6 @@
 package creatures;
 
+import org.omg.CORBA.OBJECT_NOT_EXIST;
 import world.World;
 
 import java.awt.*;
@@ -62,6 +63,9 @@ public class Creature {
 
         damage = (int) (Math.random() * damage + 1);
 
+        notify("You attack the '%s' for %d damage.", other.glyph, damage);
+        other.notify("The '%s' attacks you for %d damage.", glyph, damage);
+
         other.modifyHp(-damage);
     }
 
@@ -95,5 +99,9 @@ public class Creature {
 
     private int attackValue() {
         return attackValue;
+    }
+
+    private void notify(String message, Object ... params){
+        ai.onNotify(String.format(message, params));
     }
 }

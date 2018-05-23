@@ -6,6 +6,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -22,12 +24,12 @@ class PlayerAiTest {
     @BeforeAll
     static void setUp() {
         player = Mockito.mock(Creature.class);
-        playerAi = new PlayerAi(player);
+        playerAi = new PlayerAi(player, new ArrayList<>());
 
     }
 
     @Test
-    public void onEnterMoveIfGround() {
+    void onEnterMoveIfGround() {
         player.x = 1;
         player.y = 1;
         playerAi.onEnter(0, 0, FLOOR);
@@ -37,7 +39,7 @@ class PlayerAiTest {
     }
 
     @Test
-    public void onEnterDoNotMoveIfNotGround() {
+    void onEnterDoNotMoveIfNotGround() {
         player.x = 0;
         player.y = 0;
         playerAi.onEnter(1, 1, WALL);
@@ -47,14 +49,14 @@ class PlayerAiTest {
     }
 
     @Test
-    public void onEnterDigsIfDiggable() {
+    void onEnterDigsIfDiggable() {
         playerAi.onEnter(0, 0, WALL);
 
         verify(player).dig(anyInt(), anyInt());
     }
 
     @Test
-    public void onEnterDoesNotDigIfNotDiggable() {
+    void onEnterDoesNotDigIfNotDiggable() {
         playerAi.onEnter(0, 0, FLOOR);
 
         verify(player, never()).dig(anyInt(), anyInt());
