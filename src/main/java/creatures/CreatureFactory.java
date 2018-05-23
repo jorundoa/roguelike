@@ -1,6 +1,7 @@
 package creatures;
 
 import asciiPanel.AsciiPanel;
+import creatures.CreatureAis.FungusAi;
 import creatures.CreatureAis.PlayerAi;
 import world.World;
 
@@ -17,5 +18,12 @@ public class CreatureFactory {
         world.addAtEmptyLocation(player);
         new PlayerAi(player);
         return player;
+    }
+
+    public Creature newFungus(){
+        Creature fungus = new Creature(world, 'f', AsciiPanel.green);
+        world.addAtEmptyLocation(fungus);
+        new FungusAi(fungus, this);
+        return fungus;
     }
 }
