@@ -32,6 +32,8 @@ public class FungusAi extends CreatureAi {
         child.x = x;
         child.y = y;
 
+        creature.notifyActionToCreaturesAround("spawn a spore");
+
         spreadcount++;
     }
 }
