@@ -78,7 +78,7 @@ public class PlayScreen implements Screen {
     }
 
     private void createWorld() {
-        world = new WorldBuilder(90, 31)
+        world = new WorldBuilder(90, 31, 3)
                 .makeCaves()
                 .build();
     }
@@ -97,7 +97,7 @@ public class PlayScreen implements Screen {
                 int wx = x + left;
                 int wy = y + top;
 
-                terminal.write(world.glyph(wx, wy), x, y, world.color(wx, wy));
+                terminal.write(world.glyph(wx, wy, player.z), x, y, world.color(wx, wy, player.z));
             }
         }
     }

@@ -2,7 +2,6 @@ package creatures.CreatureAis;
 
 import creatures.Creature;
 import creatures.CreatureAi;
-import sun.rmi.log.LogInputStream;
 import tile.Tile;
 
 import java.util.List;
@@ -17,10 +16,11 @@ public class PlayerAi extends CreatureAi {
     }
 
     @Override
-    public void onEnter(int x, int y, Tile tile) {
+    public void onEnter(int x, int y, int z, Tile tile) {
         if (tile.isGround()) {
             creature.x = x;
             creature.y = y;
+            creature.z = z;
         } else if (tile.isDiggable()) {
             creature.dig(x, y);
         }

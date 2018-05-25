@@ -11,8 +11,9 @@ import java.util.List;
 public class World {
     private int width;
     private int height;
+    private int depth;
 
-    private Tile[][] tiles;
+    private Tile[][][] tiles;
     private List<Creature> creatures;
 
 
@@ -24,23 +25,28 @@ public class World {
         return height;
     }
 
-    World(Tile[][] tiles) {
+    public int getDepth() {
+        return depth;
+    }
+
+    World(Tile[][][] tiles) {
         this.tiles = tiles;
         this.width = tiles.length;
         this.height = tiles[0].length;
+        this.depth = tiles[0][0].length;
         creatures = new ArrayList<>();
     }
 
 
-    public Tile tile(int x, int y) {
-        if (!isWithinWorld(x, y))
+    public Tile tile(int x, int y, int z) {
+        if (!isWithinWorld(x, y, z))
             return Tile.BOUNDS;
         else
-            return tiles[x][y];
+            return tiles[x][y][z];
     }
 
-    public Creature creature(int x, int y) {
-        return creatures.stream().filter(c -> (c.x == x && c.y == y)).findAny().orElse(null);
+    public Creature creature(int x, int y, int z) {
+        return creatures.stream().filter(c -> (c.x == x && c.y == y && c.z == z)).findAny().orElse(null);
     }
 
     public void update() {
@@ -52,31 +58,32 @@ public class World {
         return creatures;
     }
 
-    public char glyph(int x, int y) {
-        return tile(x, y).glyph();
+    public char glyph(int x, int y, int z) {
+        return tile(x, y, z).glyph();
     }
 
-    public Color color(int x, int y) {
-        return tile(x, y).color();
+    public Color color(int x, int y, int z) {
+        return tile(x, y, z).color();
     }
 
-    public void dig(int x, int y) {
-        if (tile(x, y).isDiggable()) {
-            tiles[x][y] = Tile.FLOOR;
+    public void dig(int x, int y, int z) {
+        if (tile(x, y, z).isDiggable()) {
+            tiles[x][y][z] = Tile.FLOOR;
         }
     }
 
-    public void addAtEmptyLocation(Creature creature) {
+    public void addAtEmptyLocation(Creature creature, int z) {
         int x;
         int y;
 
         do {
             x = (int) (Math.random() * width);
             y = (int) (Math.random() * height);
-        } while (!isEmpty(x, y));
+        } while (!isEmpty(x, y, z));
 
         creature.x = x;
         creature.y = y;
+        creature.z = z;
         creatures.add(creature);
     }
 
@@ -84,11 +91,16 @@ public class World {
         creatures.remove(other);
     }
 
-    public boolean isEmpty(int x, int y) {
-        return tile(x, y).isGround() && creature(x, y) == null;
+    public boolean isEmpty(int x, int y, int z) {
+        return tile(x, y, z).isGround() && creature(x, y, z) == null;
     }
 
-    public boolean isWithinWorld(int x, int y) {
-        return x >= 0 && x < width && y >= 0 && y < height;
+    public boolean isWithinWorld(int x, int y, int z) {
+        return x >= 0
+                && x < width
+                && y >= 0
+                && y < height
+                && z >= 0
+                && z < depth;
     }
 }

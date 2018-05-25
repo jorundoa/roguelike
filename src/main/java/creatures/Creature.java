@@ -1,5 +1,6 @@
 package creatures;
 
+import tile.Tile;
 import world.World;
 
 import java.awt.*;
@@ -14,6 +15,7 @@ public class Creature {
 
     public int x;
     public int y;
+    public int z;
 
     private int hp;
     private int maxHp;
@@ -44,14 +46,26 @@ public class Creature {
     }
 
     public void dig(int wx, int wy) {
-        world.dig(wx, wy);
+        world.dig(wx, wy, z);
     }
 
     public void moveBy(int mx, int my) {
-        Creature other = world.creature(x + mx, y + my);
+        Tile tile = world.tile(x + mx, y + my, z);
+
+        int mz = 0;
+        if (tile == Tile.STAIRS_DOWN) {
+            notifyActionToCreaturesAround("walk down the stairs to level %d.", z - 1);
+            mz = 1;
+        } else if (tile == Tile.STAIRS_UP) {
+            notifyActionToCreaturesAround("walk up the stairs to level %d.", z + 1);
+            mz = -1;
+        }
+
+
+        Creature other = world.creature(x + mx, y + my, z);
 
         if (other == null) {
-            ai.onEnter(x + mx, y + my, world.tile(x + mx, y + my));
+            ai.onEnter(x + mx, y + my, z + mz, world.tile(x + mx, y + my, z));
         } else {
             attack(other);
         }
@@ -63,7 +77,7 @@ public class Creature {
             for (int oy = -r; oy < r + 1; oy++) {
                 if (ox * ox + oy * oy > r * r) continue;
 
-                Creature other = world.creature(x + ox, y + oy);
+                Creature other = world.creature(x + ox, y + oy, z);
 
                 if (other == null) continue;
 
@@ -104,6 +118,7 @@ public class Creature {
         hp += amount;
 
         if (hp <= 0) {
+            notifyActionToCreaturesAround("die");
             world.remove(this);
         }
     }
@@ -113,7 +128,7 @@ public class Creature {
     }
 
     public boolean canEnter(int x, int y) {
-        return world.isEmpty(x, y) && world.isWithinWorld(x, y);
+        return world.isEmpty(x, y, z) && world.isWithinWorld(x, y, z);
     }
 
     public int maxHp() {

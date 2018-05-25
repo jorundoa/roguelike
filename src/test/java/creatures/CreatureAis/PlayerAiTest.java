@@ -32,32 +32,35 @@ class PlayerAiTest {
     void onEnterMoveIfGround() {
         player.x = 1;
         player.y = 1;
-        playerAi.onEnter(0, 0, FLOOR);
+        playerAi.onEnter(0, 0, 0, FLOOR);
 
         assertThat(player.x, is(0));
         assertThat(player.y, is(0));
+        assertThat(player.z, is(0));
     }
 
     @Test
     void onEnterDoNotMoveIfNotGround() {
         player.x = 0;
         player.y = 0;
-        playerAi.onEnter(1, 1, WALL);
+        player.z = 0;
+        playerAi.onEnter(1, 1, 1, WALL);
 
         assertThat(player.x, is(0));
         assertThat(player.y, is(0));
+        assertThat(player.z, is(0));
     }
 
     @Test
     void onEnterDigsIfDiggable() {
-        playerAi.onEnter(0, 0, WALL);
+        playerAi.onEnter(0, 0, 0, WALL);
 
         verify(player).dig(anyInt(), anyInt());
     }
 
     @Test
     void onEnterDoesNotDigIfNotDiggable() {
-        playerAi.onEnter(0, 0, FLOOR);
+        playerAi.onEnter(0, 0, 0, FLOOR);
 
         verify(player, never()).dig(anyInt(), anyInt());
     }

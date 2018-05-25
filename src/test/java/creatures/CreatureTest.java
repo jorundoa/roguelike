@@ -29,12 +29,13 @@ class CreatureTest {
         creature.setCreatureAi(ai);
         creature.x = 0;
         creature.y = 0;
+        creature.z = 0;
     }
 
     @Test
     void notifiesOtherCreature() {
         Creature other = mock(Creature.class);
-        when(world.creature(0, 1)).thenReturn(other);
+        when(world.creature(0, 1, 0)).thenReturn(other);
 
         creature.notifyActionToCreaturesAround("attack an enemy");
 
@@ -43,7 +44,7 @@ class CreatureTest {
 
     @Test
     void notifiesSelf() {
-        when(world.creature(0, 0)).thenReturn(creature);
+        when(world.creature(0, 0, 0)).thenReturn(creature);
 
         creature.notifyActionToCreaturesAround("attack an enemy");
 
