@@ -104,7 +104,7 @@ public class PlayScreen implements Screen {
 
     private void displayCreatures(AsciiPanel terminal, int left, int top) {
         world.allCreatures().stream()
-                .filter(c -> withinScreen(c.x, c.y))
+                .filter(c -> withinScreen(c.x, c.y, c.z))
                 .forEach(c -> terminal.write(c.glyph(), c.x - left, c.y - top, c.color()));
     }
 
@@ -116,11 +116,12 @@ public class PlayScreen implements Screen {
         messages.clear();
     }
 
-    private boolean withinScreen(int x, int y) {
+    private boolean withinScreen(int x, int y, int z) {
         return x >= getScrollX() &&
                 x < getScrollX() + screenWidth &&
                 y >= getScrollY() &&
-                y < getScrollY() + screenHeight;
+                y < getScrollY() + screenHeight &&
+                z == player.z;
     }
 
     private int getScrollX() {
